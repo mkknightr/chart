@@ -29,9 +29,9 @@ body {
 
 
 canvas { 
-    margin-top: 44px;
+    padding:0px; 
+    margin: 20px;
     float: right;
-    overflow: scroll;
 }
 
 #config { 

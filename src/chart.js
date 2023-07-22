@@ -28,9 +28,7 @@ function parseData(inputData) {
     console.log(inputData);
     const entries = inputData.split(';');
     for (const entry of entries) {
-        console.log(entry);
         const [year, value] = entry.split(',');
-        console.log(year + " - " + value);
         data.push([parseInt(year),parseInt(value)]);
     }
     return data;
@@ -85,10 +83,15 @@ function drawInteractiveChart(data) {
     const chartType = document.getElementById("chartType").value; // Get chart type directly here
     config = getChartConfig();
 
-    const barWidth = 40; // Width of each bar in the bar chart
-    const barSpacing = 20; // Spacing between bars in the bar chart
-    const axisOffset = 20; // Offset for axis labels
-    const arrowSize = 5; // Size of the arrow
+
+    const axisOffset = 50; // Offset for axis labels
+    const arrowSize =10; // Size of the arrow
+
+    console.log(data.length); 
+    const barWidth = ((ctx.canvas.width - axisOffset * 2 - arrowSize) / (data.length * 1.5)); // Width of each bar in the bar chart
+    console.log(barWidth); 
+    const barSpacing = ((ctx.canvas.width - axisOffset * 2 - arrowSize) / (data.length * 3)); // Spacing between bars in the bar chart
+    console.log(barSpacing); 
 
     // Find the maximum production value to calculate the scale
     const maxProduction = Math.max(...data.map((entry) => entry[1]));
@@ -96,6 +99,9 @@ function drawInteractiveChart(data) {
     // Calculate the scale for the bar chart based on the canvas height and the maximum production value
     const scale = (ctx.canvas.height - axisOffset * 3) / maxProduction; // Increase offset for labels
 
+    ctx.lineWidth = 2; 
+    ctx.setLineDash([]);
+    ctx.strokeStyle = 'black'; 
     // Draw the x-axis
     ctx.beginPath();
     ctx.moveTo(axisOffset, ctx.canvas.height - axisOffset);
@@ -113,6 +119,7 @@ function drawInteractiveChart(data) {
     ctx.moveTo(axisOffset, axisOffset);
     ctx.lineTo(axisOffset + arrowSize, axisOffset + arrowSize);
     ctx.stroke();
+    // drawAxes(); 
 
     // Draw x-axis label
     ctx.fillStyle = config.font.color;
@@ -122,16 +129,19 @@ function drawInteractiveChart(data) {
 
     // Draw y-axis label
     ctx.save();
-    ctx.translate(axisOffset / 2, axisOffset / 2);
+    ctx.translate(axisOffset / 2, axisOffset);
     ctx.rotate(-Math.PI / 2);
     ctx.textAlign = "center";
     ctx.fillText("产量（万吨）", 0, 0);
     ctx.restore();
 
+
+    const rotate = barWidth + barSpacing - config.font.size * 4; 
+    console.log(rotate); 
     // Draw x-axis tick marks and labels
     data.forEach((entry, index) => {
         const year = entry[0];
-        const x = axisOffset + index * (barWidth + barSpacing);
+        const x = axisOffset + index * (barWidth + barSpacing) + barSpacing;
         const y = ctx.canvas.height - axisOffset;
 
         // Draw the tick mark
@@ -141,7 +151,18 @@ function drawInteractiveChart(data) {
         ctx.stroke();
 
         // Draw the year label
-        ctx.fillText(year.toString(), x, y + 15);
+        if (rotate > 10) { 
+            ctx.fillText(year.toString(), x, y + axisOffset / 2); 
+        }
+        else {
+            ctx.save(); 
+            console.log(year); 
+            ctx.textAlign = "center";
+            ctx.translate(x + config.font.size / 2.5, y + axisOffset / 2); 
+            ctx.rotate(-Math.PI / 2); 
+            ctx.fillText(year.toString(),0, 0);
+            ctx.restore(); 
+        }
     });
 
     // Draw y-axis tick marks and labels
@@ -216,6 +237,9 @@ function drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSp
     // Draw the line
     ctx.strokeStyle = config.line.color;
     ctx.lineWidth = config.line.width;
+    if (document.getElementById("lineStyle").value == "dashed") { 
+        ctx.setLineDash([4, 4]); 
+    }
     ctx.beginPath();
     points.forEach((point, index) => {
         const [x, y] = point;
@@ -262,12 +286,12 @@ function handleChartTypeChange() {
 
 // 6. Function to handle the change event of the data and redraw the chart on default data. 
 function handleDataChangeDefault() { 
-    drawInteractiveChart(defaultData); 
+    data = defaultData; 
+    drawInteractiveChart(data); 
 }
 
 
 function handleDataChangeInput() {
-
     const rawData = document.getElementById("dataInput").value;
     data = parseData(rawData);
     drawInteractiveChart(data); 
