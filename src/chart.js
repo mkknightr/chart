@@ -9,8 +9,8 @@ const defaultData = [
 
 
 let config;
-let data = defaultData; 
 
+let data = defaultData;
 // Helper function to get canvas context
 function getCanvasContext() {
     return document.getElementById("chartCanvas").getContext("2d");
@@ -31,6 +31,7 @@ function parseData(inputData) {
         const [year, value] = entry.split(',');
         data.push([parseInt(year),parseInt(value)]);
     }
+    data.sort((a, b) => a[0] - b[0]);
     return data;
 }
 
@@ -77,7 +78,12 @@ function getChartConfig() {
 }
 
 // 1. Function to draw the interactive chart based on input data
-function drawInteractiveChart(data) {
+function drawInteractiveChart(rawData) {
+    //the var data is the raw data
+    let data = JSON.parse(JSON.stringify(rawData));
+
+    dataFilter(data);
+
     clearCanvas();
     const ctx = getCanvasContext();
     const chartType = document.getElementById("chartType").value; // Get chart type directly here
@@ -287,6 +293,7 @@ function handleChartTypeChange() {
 // 6. Function to handle the change event of the data and redraw the chart on default data. 
 function handleDataChangeDefault() { 
     data = defaultData; 
+    displayFilter();
     drawInteractiveChart(data); 
 }
 
@@ -294,14 +301,77 @@ function handleDataChangeDefault() {
 function handleDataChangeInput() {
     const rawData = document.getElementById("dataInput").value;
     data = parseData(rawData);
+    displayFilter();
     drawInteractiveChart(data); 
 }
-// Example data for the chart (year and production in million tons)
+
+//show data filter column
+function displayFilter(){
+    console.log("display filter");
+
+    let list = document.getElementById('dataList');
+    while (list.firstChild) {
+        list.removeChild(list.firstChild);
+    }
+// add a li for every data pair
+    for (let i = 0; i < data.length; i++) {
+        let listItem = document.createElement('li');
+        let checkbox = document.createElement('input');
+        checkbox.type = "checkbox";  
+        checkbox.value = i;  //set checkbox's value with the index of the array
+        checkbox.id = 'checkbox' + i;  // checkbox's unique id
+        checkbox.checked = true;
+
+        let label = document.createElement('label');
+        label.htmlFor = 'checkbox' + i;  //associtate the label and checkbox
+        label.textContent = "年份:" + data[i][0] + ", 产量:" + data[i][1];
+
+        listItem.appendChild(checkbox);
+        listItem.appendChild(label);
+
+        list.appendChild(listItem); 
+    }
+
+    // add change event
+    let ul = document.getElementById('dataList');
+    let items = ul.getElementsByTagName('li');
+
+    for (let i = 0; i < items.length; i++) {
+        items[i].addEventListener('click', function() {
+            this.classList.toggle('selected');
+            drawInteractiveChart(data);
+        });
+    }
+    }
+
+
+
+//data filter
+function dataFilter(data){
+
+    let indices = [];
+    let list = document.getElementById('dataList');
+    let checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (!checkbox.checked) {
+            indices.push(checkbox.value);
+        }
+    }
+
+    //filter out some data set;
+    indices.sort((a, b) => b - a);
+    for (let index of indices) {
+        data.splice(index, 1);
+    }
+    // console.log('filter');
+}
+
 
 
 // Initial chart setup and rendering
 config = getChartConfig();
 drawInteractiveChart(data);
+displayFilter();
 
 // Event listeners for UI inputs
 document.getElementById("chartType").addEventListener("change", handleChartTypeChange);
