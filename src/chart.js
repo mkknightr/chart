@@ -95,10 +95,22 @@ function drawInteractiveChart(data) {
 
     // Find the maximum production value to calculate the scale
     const maxProduction = Math.max(...data.map((entry) => entry[1]));
+    const minProduction = Math.min(...data.map((entry) => entry[1]));
+
+    const difference = maxProduction - minProduction; 
+    
+    var originalPoint = 0; 
+    if (minProduction > 3 * difference) { 
+        originalPoint = minProduction - difference * (1/2); 
+    }
+
+    // 如果数据之间的极差不到最小值的三分之一，那么原点就不设为零，转而设为最小值减去极差的二分之一，这样的话：数据之间的差距会更加明显易辨；
+    
 
     // Calculate the scale for the bar chart based on the canvas height and the maximum production value
-    const scale = (ctx.canvas.height - axisOffset * 3) / maxProduction; // Increase offset for labels
-
+    const scale = (ctx.canvas.height - axisOffset * (3.5)) / (maxProduction - originalPoint); // Increase offset for labels
+    console.log("scale: " + scale); 
+    console.log("originalPoint: " + originalPoint); 
     ctx.lineWidth = 2; 
     ctx.setLineDash([]);
     ctx.strokeStyle = 'black'; 
@@ -167,12 +179,13 @@ function drawInteractiveChart(data) {
 
     // Draw y-axis tick marks and labels
     const numTicks = 6; // Number of tick marks on the y-axis
-    const tickStep = maxProduction / numTicks;
+    const tickStep = (maxProduction - originalPoint) / numTicks;
+    console.log("tickStep: " + tickStep); 
     for (let i = 0; i <= numTicks; i++) {
-        const production = i * tickStep;
+        const production = i * tickStep + originalPoint;
         const x = axisOffset;
-        const y = ctx.canvas.height - axisOffset - production * scale;
-
+        const y = ctx.canvas.height - axisOffset - (production - originalPoint) * scale;
+        console.log("x : " + x + " y: " + y); 
         // Draw the tick mark
         ctx.beginPath();
         ctx.moveTo(x, y);
@@ -180,7 +193,7 @@ function drawInteractiveChart(data) {
         ctx.stroke();
 
         // Draw the production label
-        ctx.fillText(production.toFixed(0), x - 10, y);
+        ctx.fillText(production.toFixed(0), x - 26, y);
     }
 
     // Draw the bar chart and display production
@@ -189,11 +202,11 @@ function drawInteractiveChart(data) {
             const year = entry[0];
             const production = entry[1];
             const x = axisOffset + index * (barWidth + barSpacing);
-            const y = ctx.canvas.height - axisOffset - production * scale;
+            const y = ctx.canvas.height - axisOffset - (production - originalPoint) * scale;
 
             // Draw the bar
             ctx.fillStyle = config.bar.color;
-            ctx.fillRect(x, y, barWidth, production * scale);
+            ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
 
             // Display production above the bar
             ctx.fillText(production.toString(), x + barWidth / 2, y - 5);
@@ -218,8 +231,8 @@ function drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSp
     const points = data.map((entry, index) => {
         const year = entry[0];
         const production = entry[1];
-        const x = axisOffset + index * (barWidth + barSpacing);
-        const y = ctx.canvas.height - axisOffset - production * scale;
+        const x = axisOffset + index * (barWidth + barSpacing) + barSpacing;
+        const y = ctx.canvas.height - axisOffset - production * scale - config.font.size * 2;
 
         // Draw the line chart data point
         ctx.fillStyle = config.line.point.color;
@@ -265,8 +278,8 @@ function drawLineChartPercentageLabels(data, scale, axisOffset, barWidth, barSpa
     data.forEach((entry, index) => {
         const year = entry[0];
         const production = entry[1];
-        const x = axisOffset + index * (barWidth + barSpacing);
-        const y = ctx.canvas.height - axisOffset - production * scale;
+        const x = axisOffset + index * (barWidth + barSpacing) + barSpacing;
+        const y = ctx.canvas.height - axisOffset - production * scale - config.font.size * 2.5;
 
         // Draw the percentage label above the data point
         const percentage = ((production / totalProduction) * 100).toFixed(2) + "%";
