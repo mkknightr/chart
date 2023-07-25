@@ -18,7 +18,7 @@ body {
 }
 
 #all-items { 
-    width: 840px;
+    width: 1040px;
     margin: auto;
     height: 100%;
     padding: 0;
@@ -71,4 +71,13 @@ textarea {
 .button-container button { 
     flex: 1;
     margin: 5px;
+}
+
+.no-bullets li {
+    list-style-type: none;
+}
+
+.no-bullets{
+    height: 100%;
+    overflow: auto; 
 }
