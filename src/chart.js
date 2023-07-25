@@ -8,8 +8,8 @@ const defaultData = [
 ];
 
 
-let config;
 
+let config;
 let data = defaultData;
 // Helper function to get canvas context
 function getCanvasContext() {
@@ -386,6 +386,89 @@ function dataFilter(data){
 
 
 
+function handleScaleCanvas(event) { 
+    let list = document.getElementById('dataList');
+    let checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+    event.preventDefault(); 
+    const delta = Math.sign(event.deltaY); 
+    const step = 0.1; 
+    var scale = 1.0; 
+    if (delta === 1) { 
+        scale += step; 
+    } else if (delta === -1) { 
+        scale -= step; 
+    }
+
+    if (scale < 0.5) { 
+        scale = 0.5; 
+    }
+    else if (scale > 2.0){ 
+        scale = 2.0; 
+    }
+    console.log("---------------------------------####" + scale);
+    clearCanvas(); 
+    list = document.getElementById('dataList');
+    checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+    const ctx = getCanvasContext(); 
+
+    const mouseX = event.clientX - ctx.canvas.offsetLeft;
+    const mouseY = event.clientY - ctx.canvas.offsetTop;
+    
+
+    const offsetX = mouseX * (1 - scale);
+    const offsetY = mouseY * (1 - scale);
+
+    ctx.translate(offsetX, offsetY);
+    ctx.scale(scale, scale);
+
+    list = document.getElementById('dataList');
+    checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+    drawInteractiveChart(data);
+    list = document.getElementById('dataList');
+    checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+    // displayFilter(); 
+    list = document.getElementById('dataList');
+    checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+}
+
+
+function handleScaleReset() { 
+    clearCanvas(); 
+    const ctx = getCanvasContext(); 
+    scale = 1.0; 
+    ctx.setTransform(1, 0, 0, 1, 0, 0); 
+    clearCanvas(); 
+    drawInteractiveChart(data); 
+    displayFilter(); 
+}
+
+
+
 // Initial chart setup and rendering
 config = getChartConfig();
 drawInteractiveChart(data);
@@ -405,3 +488,5 @@ document.getElementById("fontSize").addEventListener("change", handleChartTypeCh
 document.getElementById("fontColor").addEventListener("change", handleChartTypeChange);
 document.getElementById("default").addEventListener("click",handleDataChangeDefault);
 document.getElementById("dataInputCheck").addEventListener("click", handleDataChangeInput); 
+document.getElementById("chartCanvas").addEventListener("wheel", handleScaleCanvas);
+document.getElementById("scaleResetButton").addEventListener("click", handleScaleReset);
