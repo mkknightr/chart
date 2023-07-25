@@ -89,3 +89,7 @@ textarea {
     margin-right: auto;
 
 }
+
+#bar-chart-config { 
+    overflow-y: auto;
+}

@@ -218,7 +218,7 @@ function drawInteractiveChart(rawData) {
         ctx.stroke();
 
         // Draw the production label
-        ctx.fillText(production.toFixed(0), x - 26, y);
+        ctx.fillText(production.toFixed(2), x - 26, y);
     }
 
     // Draw the bar chart and display production
@@ -241,28 +241,27 @@ function drawInteractiveChart(rawData) {
 
                     // Draw the bar
                     ctx.fillStyle = gradient;
-                    ctx.fillRect(x, y, barWidth, production * scale);
+                    ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
 
                 }
                 //从上到下渐变
                 if (config.bar.gradientStyle == "topToBottom") {
                     //试验区  
                     //实验成功 可以这样添加渐变色  在第一行代码哪里设置一个渐变的线条，
-                    const gradient = ctx.createLinearGradient(x, y, x, y + production * scale);
+                    const gradient = ctx.createLinearGradient(x, y, x, y + (production - originalPoint) * scale);
                     gradient.addColorStop(0, config.bar.startColor);    // 添加渐变的颜色和位置
 
                     gradient.addColorStop(1, config.bar.endColor);
 
                     // Draw the bar
                     ctx.fillStyle = gradient;
-                    ctx.fillRect(x, y, barWidth, production * scale);
+                    ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
 
                 }
             }
-
-            if (config.bar.fillStyle === "singleFill") {
+            else if (config.bar.fillStyle === "singleFill") {
                 ctx.fillStyle = config.bar.color;
-                ctx.fillRect(x, y, barWidth, production * scale);
+                ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
             }
 
             // Display production above the bar
@@ -510,7 +509,6 @@ function handleScaleReset() {
     ctx.setTransform(1, 0, 0, 1, 0, 0); 
     clearCanvas(); 
     drawInteractiveChart(data); 
-    displayFilter(); 
 }
 
 
