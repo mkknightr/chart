@@ -49,7 +49,6 @@ function getChartConfig() {
     const fontSize = parseInt(document.getElementById("fontSize").value);
     const fontColor = document.getElementById("fontColor").value;
 
-    // TO DO： 增加获取二元数据数组、填充样式、渐变控制，并添加到return内容中
     //填充样式选择
     const fillStyle = document.getElementById("fillStyle").value;
     //纯色填充
@@ -59,8 +58,6 @@ function getChartConfig() {
     const endColor = document.getElementById('endColor').value;
     //渐变样式
     const gradientStyle = document.getElementById('gradientStyle').value;
-
-
 
 
     return {
@@ -105,12 +102,18 @@ function drawInteractiveChart(rawData) {
     const axisOffset = 50; // Offset for axis labels
     const arrowSize = 10; // Size of the arrow
 
-    console.log(data.length);
-    const barWidth = ((ctx.canvas.width - axisOffset * 2 - arrowSize) / (data.length * 1.5)); // Width of each bar in the bar chart
-    console.log(barWidth);
-    const barSpacing = ((ctx.canvas.width - axisOffset * 2 - arrowSize) / (data.length * 3)); // Spacing between bars in the bar chart
-    console.log(barSpacing);
 
+    console.log(data.length); 
+    var barWidth = ((ctx.canvas.width - axisOffset * 2 - arrowSize) / (data.length * 1.5)); // Width of each bar in the bar chart
+
+    console.log(barWidth); 
+    var barSpacing = ((ctx.canvas.width - axisOffset * 2 - arrowSize) / (data.length * 3)); // Spacing between bars in the bar chart
+    console.log(barSpacing); 
+
+    if (data.length == 1) { 
+        barWidth = 200; 
+        barSpacing = 100; 
+    }
     // Find the maximum production value to calculate the scale
     const maxProduction = Math.max(...data.map((entry) => entry[1]));
     const minProduction = Math.min(...data.map((entry) => entry[1]));
@@ -120,6 +123,10 @@ function drawInteractiveChart(rawData) {
     var originalPoint = 0;
     if (minProduction > 3 * difference) {
         originalPoint = minProduction - difference * (1 / 2);
+    }
+
+    if (difference == 0) { 
+        originalPoint = 0; 
     }
 
     // 如果数据之间的极差不到最小值的三分之一，那么原点就不设为零，转而设为最小值减去极差的二分之一，这样的话：数据之间的差距会更加明显易辨；
