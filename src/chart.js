@@ -268,6 +268,7 @@ function drawInteractiveChart(rawData) {
             else if (config.bar.fillStyle === "singleFill") {
                 ctx.fillStyle = config.bar.color;
                 ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
+
                 ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'; // 设置边框颜色为黑色
                 ctx.lineWidth = 1; // 设置边框线宽为2个像素
                 ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
@@ -350,8 +351,6 @@ function drawInteractiveChart(rawData) {
                 ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
                 ctx.lineWidth = 1; // 设置边框线宽为2个像素
                 ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
-
-
             }
 
             ctx.fillStyle = "black"
@@ -568,7 +567,8 @@ function dataFilter(data) {
 
 
 
-function handleScaleCanvas(event) {
+
+function handleScaleCanvas(event) { 
     let list = document.getElementById('dataList');
     let checkboxes = list.getElementsByTagName('input');
     for (let checkbox of checkboxes) {
@@ -576,6 +576,7 @@ function handleScaleCanvas(event) {
             console.log(checkbox);
         }
     }
+
     event.preventDefault();
     const delta = Math.sign(event.deltaY);
     const step = 0.1;
@@ -594,6 +595,7 @@ function handleScaleCanvas(event) {
     }
     console.log("---------------------------------####" + scale);
     clearCanvas();
+
     list = document.getElementById('dataList');
     checkboxes = list.getElementsByTagName('input');
     for (let checkbox of checkboxes) {
@@ -601,10 +603,12 @@ function handleScaleCanvas(event) {
             console.log(checkbox);
         }
     }
+
     const ctx = getCanvasContext();
 
     const mouseX = event.clientX - ctx.canvas.offsetLeft;
     const mouseY = event.clientY - ctx.canvas.offsetTop;
+
 
 
     const offsetX = mouseX * (1 - scale);
@@ -637,6 +641,7 @@ function handleScaleCanvas(event) {
         }
     }
 }
+
 
 
 function handleScaleReset() {
