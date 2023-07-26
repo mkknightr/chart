@@ -218,7 +218,7 @@ function drawInteractiveChart(rawData) {
         ctx.stroke();
 
         // Draw the production label
-        ctx.fillText(production.toFixed(2), x - 26, y);
+        ctx.fillText(production.toFixed(1), x - 26, y);
     }
 
     // Draw the bar chart and display production
