@@ -1,48 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./styles.css" rel="stylesheet" />
     <link rel="icon" href="../image/icon.png" sizes="32x32" type="image/png">
-
-    <title>Interactive Chart</title>
+    <title>交互式图表</title>
 </head>
 
 <body>
+    <!-- 整体布局 -->
     <div id="all-items">
-        <!--<canvas>：画板-->
+        <!-- 画布 -->
         <canvas id="chartCanvas" width="800" height="400"></canvas>
-        <!--<div>：配置板-->
+        <!-- 配置面板 -->
         <div id="config">
-            <!--<div>：配置显示参数-->
+            <!-- 配置显示参数 -->
             <div id="hide-config">
-                <label for="chartType">Chart Type:</label>
+                <label for="chartType">图表类型:</label>
                 <select id="chartType">
-                    <option value="bar">Bar Chart</option>
-                    <option value="line">Line Chart</option>
-                    <option value="all">All</option>
+                    <option value="bar">柱状图</option>
+                    <option value="line">折线图</option>
+                    <option value="all">柱状图和折线图</option>
                 </select>
                 <div id="scale-config">
-                    <button id="scaleResetButton">Scale Reset</button>
+                    <button id="scaleResetButton">大小重置</button>
                 </div>
-            </div>
-            <!--<div id="bar-chart-config">: 柱状图配置参数-->
-            <div id="bar-chart-config">
+                
+                <!-- 数据选择配置 -->
+                <div id="data-select-config">
+                    <ul id="dataList" class="no-bullets">
+                        <!-- 数据列表项，使用无序列表展示 -->
+                    </ul>
+                </div>
+
                 <div>
+                    <!-- 输入数据文本域 -->
                     <label for="dataInput">输入数据：</label>
                     <textarea id="dataInput" placeholder="输入数据格式:2019,2;2020,3;2021,5;2022,4(注意请使用英文标点；注意最后一组数据后不需要加封号)"
                         rows="4" cols="18"></textarea>
                     <div class="button-container">
+                        <!-- 数据确认按钮 -->
                         <button id="dataInputCheck">确认</button>
+                        <!-- 使用默认数据按钮 -->
                         <button id="default">使用默认数据</button>
                     </div>
                 </div>
-
+                
+            </div>
+            <!-- 柱状图配置面板 -->
+            <div id="bar-chart-config">
                 <!-- 选择填充样式  -->
                 <div>
-                    <label for="fillStyle">Fill Style:</label>
+                    <label for="fillStyle">填充样式:</label>
                     <select id="fillStyle">
                         <option value="singleFill">纯色填充</option>
                         <option value="gradientFill">渐变填充</option>
@@ -50,77 +61,90 @@
                         <option value="circleFill">圆圈填充</option>
                         <option value="lineFill">直线填充</option>
                         <option value="meshFill">网格填充</option>
-
                         <!-- 纯色填充 -->
                         <div>
                             <label for="barColor">Bar Color:</label>
                             <input type="color" id="barColor" value="#66ccff">
                         </div>
-
                         <!-- 渐变填充 -->
-                        <!--选择渐变色的样式 从左到右和从上到下两种-->
+                        <!-- 选择渐变色的样式 从左到右和从上到下两种 -->
                         <div>
-                            <label for="gradientStyle">Gradient Style:</label>
+                            <label for="gradientStyle">渐变样式:</label>
                             <select id="gradientStyle">
-                                <option value="topToBottom">上下渐变</option>
-                                <option value="leftToRight">左右渐变</option>
+                                <option value="topToBottom">从上到下渐变</option>
+                                <option value="leftToRight">从左到右渐变</option>
                             </select>
                         </div>
-                        <!-- 给渐变色选择颜色，两个颜色 一个start 一个end -->
+                        <!-- 给渐变色选择颜色，start和end -->
                         <div id='gradientColor'>
-                            <label for="barColor">Gradient Color:</label>
                             <div>
-                                <label for="startColor">Start Color:</label>
+                                <label for="startColor">渐变开始颜色</label>
                                 <input type="color" id="startColor" value="#4CAF50">
                             </div>
                             <div>
-                                <label for="endColor">End Color:</label>
+                                <label for="endColor">渐变结束颜色</label>
                                 <input type="color" id="endColor" value="#FF5733">
                             </div>
-
                         </div>
-
+                        <!-- 文字配置参数 -->
+                        <div id="font-config">
+                            <!-- 配置字体参数 -->
+                            <div>
+                                <label for="fontFamily">设置字体:</label>
+                                <input type="text" id="fontFamily" value="Helvetica, Arial, sans-serif">
+                            </div>
+                            <!-- 配置文字大小参数 -->
+                            <div>
+                                <label for="fontSize">文字大小:</label>
+                                <input type="number" id="fontSize" value="16">
+                            </div>
+                            <!-- 配置文字颜色参数 -->
+                            <div>
+                                <label for="fontColor">文字颜色:</label>
+                                <input type="color" id="fontColor" value="#000000">
+                            </div>
+                        </div>
                 </div>
-                <!--<div id="line-chart-config">: 折线图配置参数-->
+                <!-- 折线图配置面板 -->
                 <div id="line-chart-config">
-                    <!--<div>：配置折线图线的颜色参数-->
+                    <!-- 配置折线图线的颜色参数 -->
                     <div>
-                        <label for="lineColor">Line Color:</label>
+                        <label for="lineColor">折线颜色:</label>
                         <input type="color" id="lineColor" value="#ff9900">
                     </div>
-                    <!--<div>：配置折线图的线的类型参数-->
+                    <!-- 配置折线图的线的类型参数 -->
                     <div>
-                        <label for="lineStyle">Line Style:</label>
+                        <label for="lineStyle">折线样式:</label>
                         <select id="lineStyle">
-                            <option value="solid">Solid</option>
-                            <option value="dashed">Dashed</option>
+                            <option value="solid">实线</option>
+                            <option value="dashed">虚线</option>
                         </select>
                     </div>
-                    <!--<div>:配置折线图的线的宽度参数-->
+                    <!-- 配置折线图的线的宽度参数 -->
                     <div>
-                        <label for="lineWidth">Line Width:</label>
+                        <label for="lineWidth">折线宽度:</label>
                         <select id="lineWidth">
                             <option value="1">1px</option>
                             <option value="2">2px</option>
                             <option value="3">3px</option>
                         </select>
                     </div>
-                    <!--<div>：配置折线图点的形状参数-->
+                    <!-- 配置折线图点的形状参数 -->
                     <div>
-                        <label for="pointShape">Point Shape:</label>
+                        <label for="pointShape">点的形状:</label>
                         <select id="pointShape">
-                            <option value="square">Square</option>
-                            <option value="circle">Circle</option>
+                            <option value="square">方形</option>
+                            <option value="circle">圆形</option>
                         </select>
                     </div>
-                    <!--<div>:配置折线图点的颜色参数-->
+                    <!-- 配置折线图点的颜色参数 -->
                     <div>
-                        <label for="pointColor">Point Color:</label>
+                        <label for="pointColor">点的颜色:</label>
                         <input type="color" id="pointColor" value="#ff0000">
                     </div>
-                    <!--<div>：配置折线图点的大小参数-->
+                    <!-- 配置折线图点的大小参数 -->
                     <div>
-                        <label for="pointSize">Point Size:</label>
+                        <label for="pointSize">点的大小:</label>
                         <select id="pointSize">
                             <option value="5">5px</option>
                             <option value="8">8px</option>
@@ -128,31 +152,10 @@
                         </select>
                     </div>
                 </div>
-                <!--<div id="font-config">: 文字配置参数-->
-                <div id="font-config">
-                    <!--<div>：配置字体参数-->
-                    <div>
-                        <label for="fontFamily">Font Family:</label>
-                        <input type="text" id="fontFamily" value="Helvetica, Arial, sans-serif">
-                    </div>
-                    <!--配置文字大小参数-->
-                    <div>
-                        <label for="fontSize">Font Size:</label>
-                        <input type="number" id="fontSize" value="16">
-                    </div>
-                    <!--配置文字颜色参数-->
-                    <div>
-                        <label for="fontColor">Font Color:</label>
-                        <input type="color" id="fontColor" value="#000000">
-                    </div>
-                </div>
-                <div id="data-select-config">
-                    <ul id="dataList" class="no-bullets">
-                    </ul>
-                </div>
             </div>
         </div>
         <script src="chart.js"></script>
+    </div>
 </body>
 
 </html>
