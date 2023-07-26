@@ -362,8 +362,8 @@ function drawInteractiveChart(rawData) {
 
     // Draw the line chart and percentage labels
     if (chartType === "line" || chartType === "all") {
-        drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSpacing);
-        drawLineChartPercentageLabels(data, scale, axisOffset, barWidth, barSpacing);
+        drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSpacing, originalPoint);
+        drawLineChartPercentageLabels(data, scale, axisOffset, barWidth, barSpacing, originalPoint);
     }
 }
 //柱状图填充中点阵填充绘制小点的函数
@@ -415,7 +415,7 @@ function drawCircles(x, y, width, height) {
 
 
 // 2. Function to draw the line and data points for the line chart
-function drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSpacing) {
+function drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSpacing, originalPoint) {
     const ctx = getCanvasContext();
     const config = getChartConfig();
 
@@ -424,7 +424,7 @@ function drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSp
         const year = entry[0];
         const production = entry[1];
         const x = axisOffset + index * (barWidth + barSpacing) + barSpacing;
-        const y = ctx.canvas.height - axisOffset - production * scale - config.font.size * 2;
+        const y = ctx.canvas.height - axisOffset - (production - originalPoint) * scale - config.font.size * 2;
 
         // Draw the line chart data point
         ctx.fillStyle = config.line.point.color;
@@ -458,7 +458,7 @@ function drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSp
 }
 
 // 3. Function to draw the percentage labels for the line chart
-function drawLineChartPercentageLabels(data, scale, axisOffset, barWidth, barSpacing) {
+function drawLineChartPercentageLabels(data, scale, axisOffset, barWidth, barSpacing, originalPoint) {
     const ctx = getCanvasContext();
     const config = getChartConfig();
 
@@ -471,7 +471,7 @@ function drawLineChartPercentageLabels(data, scale, axisOffset, barWidth, barSpa
         const year = entry[0];
         const production = entry[1];
         const x = axisOffset + index * (barWidth + barSpacing) + barSpacing;
-        const y = ctx.canvas.height - axisOffset - production * scale - config.font.size * 2.5;
+        const y = ctx.canvas.height - axisOffset - (production - originalPoint) * scale - config.font.size * 2.5;
 
         // Draw the percentage label above the data point
         const percentage = ((production / totalProduction) * 100).toFixed(2) + "%";
