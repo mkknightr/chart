@@ -343,13 +343,14 @@ function drawInteractiveChart(rawData) {
 
             }
             else {
+
+                ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
+                ctx.lineWidth = 1; // 设置边框线宽为2个像素
                 ctx.fillStyle = "white";
                 ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
                 //绘制小圈圈
                 drawCircles(x, y, barWidth, (production - originalPoint) * scale);
                 //绘制边框
-                ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
-                ctx.lineWidth = 1; // 设置边框线宽为2个像素
                 ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
             }
 
