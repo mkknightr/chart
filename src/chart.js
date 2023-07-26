@@ -8,8 +8,8 @@ const defaultData = [
 ];
 
 
-let config;
 
+let config;
 let data = defaultData;
 // Helper function to get canvas context
 function getCanvasContext() {
@@ -103,16 +103,16 @@ function drawInteractiveChart(rawData) {
     const arrowSize = 10; // Size of the arrow
 
 
-    console.log(data.length); 
+    console.log(data.length);
     var barWidth = ((ctx.canvas.width - axisOffset * 2 - arrowSize) / (data.length * 1.5)); // Width of each bar in the bar chart
 
-    console.log(barWidth); 
+    console.log(barWidth);
     var barSpacing = ((ctx.canvas.width - axisOffset * 2 - arrowSize) / (data.length * 3)); // Spacing between bars in the bar chart
-    console.log(barSpacing); 
+    console.log(barSpacing);
 
-    if (data.length == 1) { 
-        barWidth = 200; 
-        barSpacing = 100; 
+    if (data.length == 1) {
+        barWidth = 200;
+        barSpacing = 100;
     }
     // Find the maximum production value to calculate the scale
     const maxProduction = Math.max(...data.map((entry) => entry[1]));
@@ -125,8 +125,8 @@ function drawInteractiveChart(rawData) {
         originalPoint = minProduction - difference * (1 / 2);
     }
 
-    if (difference == 0) { 
-        originalPoint = 0; 
+    if (difference == 0) {
+        originalPoint = 0;
     }
 
     // 如果数据之间的极差不到最小值的三分之一，那么原点就不设为零，转而设为最小值减去极差的二分之一，这样的话：数据之间的差距会更加明显易辨；
@@ -218,7 +218,7 @@ function drawInteractiveChart(rawData) {
         ctx.stroke();
 
         // Draw the production label
-        ctx.fillText(production.toFixed(0), x - 26, y);
+        ctx.fillText(production.toFixed(2), x - 26, y);
     }
 
     // Draw the bar chart and display production
@@ -238,35 +238,126 @@ function drawInteractiveChart(rawData) {
                     gradient.addColorStop(0, config.bar.startColor);    // 添加渐变的颜色和位置
 
                     gradient.addColorStop(1, config.bar.endColor);
-
+                    //绘制边框
+                    ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
+                    ctx.lineWidth = 2; // 设置边框线宽为2个像素
+                    ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
                     // Draw the bar
                     ctx.fillStyle = gradient;
-                    ctx.fillRect(x, y, barWidth, production * scale);
+                    ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
 
                 }
                 //从上到下渐变
                 if (config.bar.gradientStyle == "topToBottom") {
                     //试验区  
                     //实验成功 可以这样添加渐变色  在第一行代码哪里设置一个渐变的线条，
-                    const gradient = ctx.createLinearGradient(x, y, x, y + production * scale);
+                    const gradient = ctx.createLinearGradient(x, y, x, y + (production - originalPoint) * scale);
                     gradient.addColorStop(0, config.bar.startColor);    // 添加渐变的颜色和位置
 
                     gradient.addColorStop(1, config.bar.endColor);
-
+                    //绘制边框
+                    ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
+                    ctx.lineWidth = 2; // 设置边框线宽为2个像素
+                    ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
                     // Draw the bar
                     ctx.fillStyle = gradient;
-                    ctx.fillRect(x, y, barWidth, production * scale);
+                    ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
 
                 }
             }
-
-            if (config.bar.fillStyle === "singleFill") {
+            else if (config.bar.fillStyle === "singleFill") {
                 ctx.fillStyle = config.bar.color;
-                ctx.fillRect(x, y, barWidth, production * scale);
+                ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
+                ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)'; // 设置边框颜色为黑色
+                ctx.lineWidth = 1; // 设置边框线宽为2个像素
+                ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
+            }
+            else if (config.bar.fillStyle === "dotFill") {
+                //x y 矩形的坐上顶点 barwidth 矩形的宽度 (production - originalPoint) * scale 矩形的高度
+                //barspacing 矩形之间的距离
+                ctx.fillStyle = "white";
+                ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
+                //绘制小点
+                drawDots(x, y, barWidth, (production - originalPoint) * scale);
+                //绘制边框
+                ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
+                ctx.lineWidth = 1; // 设置边框线宽为2个像素
+                ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
+
+            }
+            else if (config.bar.fillStyle === "lineFill") {
+                ctx.fillStyle = "white";
+                ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
+                //绘制边框
+                ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
+                ctx.lineWidth = 1; // 设置边框线宽为2个像素
+                ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
+                //
+                const gap = 8; // 直线间隔
+                const lineWidth = 5; // 直线宽度
+                const startX = x; // 矩形左上角的x坐标
+                const endX = x + barWidth; // 矩形右下角的x坐标
+                const startY = y; // 矩形左上角的y坐标
+                const endY = y + ((production - originalPoint) * scale); // 矩形右下角的y坐标
+
+                // 从左上角开始，绘制横向直线
+                for (let y = startY; y <= endY; y += gap + lineWidth) {
+                    ctx.beginPath();
+                    ctx.moveTo(startX, y);
+                    ctx.lineTo(endX, y);
+                    ctx.stroke();
+                }
+
+            }
+            else if (config.bar.fillStyle === "meshFill") {
+                ctx.fillStyle = "white";
+                ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
+                //绘制边框
+                ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
+                ctx.lineWidth = 1; // 设置边框线宽为2个像素
+                ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
+                //
+                const gap = 8; // 直线间隔
+                const lineWidth = 5; // 直线宽度
+                const startX = x; // 矩形左上角的x坐标
+                const endX = x + barWidth; // 矩形右下角的x坐标
+                const startY = y; // 矩形左上角的y坐标
+                const endY = y + ((production - originalPoint) * scale); // 矩形右下角的y坐标
+
+                // 从左上角开始，绘制横向直线
+                for (let y = startY; y <= endY; y += gap + lineWidth) {
+                    ctx.beginPath();
+                    ctx.moveTo(startX, y);
+                    ctx.lineTo(endX, y);
+                    ctx.stroke();
+                }
+                // 从左上角开始，绘制纵向直线
+                for (let x = startX; x <= endX; x += gap + lineWidth) {
+                    ctx.beginPath();
+                    ctx.moveTo(x, startY);
+                    ctx.lineTo(x, endY);
+                    ctx.stroke();
+                }
+
+
+            }
+            else {
+                ctx.fillStyle = "white";
+                ctx.fillRect(x, y, barWidth, (production - originalPoint) * scale);
+                //绘制小圈圈
+                drawCircles(x, y, barWidth, (production - originalPoint) * scale);
+                //绘制边框
+                ctx.strokeStyle = 'black'; // 设置边框颜色为黑色
+                ctx.lineWidth = 1; // 设置边框线宽为2个像素
+                ctx.strokeRect(x, y, barWidth, (production - originalPoint) * scale);
+
+
             }
 
+            ctx.fillStyle = "black"
             // Display production above the bar
             ctx.fillText(production.toString(), x + barWidth / 2, y - 5);
+
         });
     }
 
@@ -274,6 +365,51 @@ function drawInteractiveChart(rawData) {
     if (chartType === "line" || chartType === "all") {
         drawLineChartLineAndDataPoints(data, scale, axisOffset, barWidth, barSpacing);
         drawLineChartPercentageLabels(data, scale, axisOffset, barWidth, barSpacing);
+    }
+}
+//柱状图填充中点阵填充绘制小点的函数
+function drawDots(x, y, width, height) {
+    const ctx = getCanvasContext();
+    const dotSize = 2; // 小点的大小
+    const dotSpacing = 6; // 小点之间的间隔
+    const columns = Math.floor(width / (dotSize + dotSpacing));
+    const rows = Math.floor(height / (dotSize + dotSpacing));
+
+    const offsetX = (width - columns * (dotSize + dotSpacing) + dotSpacing) / 2;
+    const offsetY = (height - rows * (dotSize + dotSpacing) + dotSpacing) / 2;
+
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < columns; col++) {
+            const dotX = x + offsetX + col * (dotSize + dotSpacing);
+            const dotY = y + offsetY + row * (dotSize + dotSpacing);
+            ctx.fillStyle = 'black'; // 小点的颜色
+            ctx.fillRect(dotX, dotY, dotSize, dotSize);
+        }
+    }
+}
+//小圈圈
+
+
+// 绘制小圆圈函数
+function drawCircles(x, y, width, height) {
+    const circleRadius = 4; // 圆圈的半径
+    const circleSpacing = 6; // 圆圈之间的间隔
+    const ctx = getCanvasContext();
+    const columns = Math.floor(width / (circleRadius * 2 + circleSpacing));
+    const rows = Math.floor(height / (circleRadius * 2 + circleSpacing));
+
+    const offsetX = (width - columns * (circleRadius * 2 + circleSpacing) + circleSpacing) / 2;
+    const offsetY = (height - rows * (circleRadius * 2 + circleSpacing) + circleSpacing) / 2;
+
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < columns; col++) {
+            const circleX = x + offsetX + col * (circleRadius * 2 + circleSpacing) + circleRadius;
+            const circleY = y + offsetY + row * (circleRadius * 2 + circleSpacing) + circleRadius;
+            ctx.beginPath();
+            ctx.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI);
+            ctx.strokeStyle = 'black'; // 圆圈边框的颜色
+            ctx.stroke();
+        }
     }
 }
 
@@ -432,6 +568,88 @@ function dataFilter(data) {
 
 
 
+function handleScaleCanvas(event) {
+    let list = document.getElementById('dataList');
+    let checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+    event.preventDefault();
+    const delta = Math.sign(event.deltaY);
+    const step = 0.1;
+    var scale = 1.0;
+    if (delta === 1) {
+        scale += step;
+    } else if (delta === -1) {
+        scale -= step;
+    }
+
+    if (scale < 0.5) {
+        scale = 0.5;
+    }
+    else if (scale > 2.0) {
+        scale = 2.0;
+    }
+    console.log("---------------------------------####" + scale);
+    clearCanvas();
+    list = document.getElementById('dataList');
+    checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+    const ctx = getCanvasContext();
+
+    const mouseX = event.clientX - ctx.canvas.offsetLeft;
+    const mouseY = event.clientY - ctx.canvas.offsetTop;
+
+
+    const offsetX = mouseX * (1 - scale);
+    const offsetY = mouseY * (1 - scale);
+
+    ctx.translate(offsetX, offsetY);
+    ctx.scale(scale, scale);
+
+    list = document.getElementById('dataList');
+    checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+    drawInteractiveChart(data);
+    list = document.getElementById('dataList');
+    checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+    // displayFilter(); 
+    list = document.getElementById('dataList');
+    checkboxes = list.getElementsByTagName('input');
+    for (let checkbox of checkboxes) {
+        if (checkbox.checked) {
+            console.log(checkbox);
+        }
+    }
+}
+
+
+function handleScaleReset() {
+    clearCanvas();
+    const ctx = getCanvasContext();
+    scale = 1.0;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    clearCanvas();
+    drawInteractiveChart(data);
+}
+
+
+
 // Initial chart setup and rendering
 config = getChartConfig();
 drawInteractiveChart(data);
@@ -448,6 +666,8 @@ document.getElementById("pointSize").addEventListener("change", handleChartTypeC
 document.getElementById("fontFamily").addEventListener("input", handleChartTypeChange);
 document.getElementById("fontSize").addEventListener("change", handleChartTypeChange);
 document.getElementById("fontColor").addEventListener("change", handleChartTypeChange);
+document.getElementById("chartCanvas").addEventListener("wheel", handleScaleCanvas);
+document.getElementById("scaleResetButton").addEventListener("click", handleScaleReset);
 document.getElementById("default").addEventListener("click", handleDataChangeDefault);
 document.getElementById("dataInputCheck").addEventListener("click", handleDataChangeInput);
 //填充样式
@@ -458,4 +678,3 @@ document.getElementById("startColor").addEventListener("change", handleChartType
 document.getElementById("endColor").addEventListener("change", handleChartTypeChange);
 //渐变色的样式
 document.getElementById("gradientStyle").addEventListener("change", handleChartTypeChange);
-//
