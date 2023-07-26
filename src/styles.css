@@ -1,23 +1,22 @@
 /*
-fileName: sytle.css
-主要用于对index.html的内容进行排版
+   文件名: styles.css
+   主要用于对index.html的内容进行排版和美化
 */
 
-
-* { 
+/* 重置默认样式 */
+* {
     margin: 0;
     padding: 0;
     border: 0;
-}
-
-
-
-body { 
-    min-width: 840px; 
-
-}
-
-#all-items { 
+  }
+  
+  /* body设置最小宽度 */
+  body {
+    min-width: 840px;
+  }
+  
+  /* 整体布局 */
+  #all-items {
     width: 1040px;
     margin: auto;
     height: 100%;
@@ -25,71 +24,227 @@ body {
     border: 0;
     display: flex;
     flex-direction: column;
-}
-
-
-canvas { 
-    padding:0px; 
+  }
+  
+  /* 画布样式 */
+  canvas {
+    padding: 0px;
     margin: 20px;
     float: right;
-}
-
-#config { 
-    margin-top: 40px;
+  }
+  
+  /* 配置面板样式 */
+  #config {
     width: 100%;
-    height: 200px;
     display: flex;
-    border-color: springgreen;
-    border-width: 4px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: #f9f9f9;
     border-radius: 4px;
-    border-style: solid;
-    padding-bottom: 2px;
-    padding-top: 2px;
-
-
-}
-
-#config > div { 
-    margin-left: 8px;
-    margin-right: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     border: 1px dashed #000;
-    padding: 2px;
-    min-width: 180px;
-}
-
-textarea { 
+  }
+  
+  /* 配置面板子元素样式 */
+  #config > div {
+    flex-basis: 300px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid #000;
+  }
+  
+  /* 文本域样式 */
+  textarea {
     border: 1.5px solid #444;
-}
-
-
-.button-container { 
+    width: 100%;
+    resize: vertical;
+  }
+  
+  /* 按钮容器样式 */
+  .button-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
-}
-
-.button-container button { 
+  }
+  
+  /* 按钮样式 */
+  .button-container button {
     flex: 1;
     margin: 5px;
-}
-
-.no-bullets li {
+  }
+  
+  /* 无序列表去除样式 */
+  .no-bullets li {
     list-style-type: none;
-}
-
-.no-bullets{
+  }
+  
+  /* 无序列表溢出自动滚动样式 */
+  .no-bullets {
     height: 100%;
-    overflow: auto; 
-}
-
-
-#scale-config { 
-    margin-top: 32px;
+    overflow: auto;
+  }
+  
+  /* 缩放配置样式 */
+  #scale-config {
+    margin-top: 12px;
     margin-left: auto;
     margin-right: auto;
-
-}
-
-#bar-chart-config { 
+    margin-bottom: 12px;
+  }
+  
+  /* 柱状图配置面板样式 */
+  #bar-chart-config {
     overflow-y: auto;
-}
+  }
+  
+  /* 折线图配置面板样式 */
+  #line-chart-config {
+    overflow-y: auto;
+  }
+  
+  /* 下拉选框样式 */
+  select {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #444;
+    font-size: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='12'%3E%3Cpath d='M0 0h16L8 12z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+    background-size: 8px;
+  }
+  
+  /* 文本输入框和颜色选择器样式 */
+  input[type="text"],
+  input[type="number"],
+  input[type="color"] {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #444;
+    font-size: 16px;
+  }
+  
+  /* 按钮样式 */
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #4caf50;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  /* 按钮悬停样式 */
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  /* 配置显示参数面板样式 */
+  #hide-config {
+    display: flex;
+    flex-direction: column;
+    flex-basis: calc(100% - 330px);
+    margin-right: 10px;
+  }
+  
+  /* 数据选择配置面板样式 */
+  #data-select-config {
+    margin-bottom: 10px;
+    border: 1px dashed #000;
+    padding: 10px;
+    height: 90px;
+    overflow-y: auto;
+  }
+  
+  /* 渐变颜色选择器样式 */
+  #gradientColor {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  
+  /* 渐变颜色选择器子元素样式 */
+  #gradientColor div {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* 渐变颜色选择器标签样式 */
+  #gradientColor label {
+    margin-right: 10px;
+  }
+  
+  /* 字体配置面板子元素样式 */
+  #font-config div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  /* 字体配置面板标签样式 */
+  #font-config label {
+    flex-basis: 130px;
+    display: inline-block;
+  }
+  
+  /* 字体配置面板文本输入框样式 */
+  #font-config input[type="text"],
+  #font-config input[type="number"] {
+    width: calc(100% - 140px);
+  }
+  
+  /* 柱状图配置面板子元素样式 */
+  #bar-chart-config > div,
+  #line-chart-config > div {
+    margin-bottom: 10px;
+  }
+  
+  /* 柱状图配置面板最后一个子元素样式 */
+  #bar-chart-config > div:last-child,
+  #line-chart-config > div:last-child {
+    margin-bottom: 0;
+  }
+  
+  /* 柱状图配置面板样式 */
+  #bar-chart-config {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+  
+  /* 配置面板子元素悬停样式 */
+  #config div:hover {
+    background-color: #f0f0f0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  
+  /* 下拉选框和颜色选择器悬停样式 */
+  select:hover,
+  input[type="color"]:hover {
+    border-color: #888;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+  }
+  
+  /* 数据选择配置中标签悬停样式 */
+  #data-select-config li label:hover {
+    color: #203bb4;
+    cursor: pointer;
+  }
+  
