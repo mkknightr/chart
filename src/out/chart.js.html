@@ -1,4 +1,32 @@
-// Global variable for chart configuration
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: chart.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: chart.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>// Global variable for chart configuration
 // 2019,2;2020,3;2021,5;2022,4
 const defaultData = [
     [2019, 2],
@@ -207,7 +235,7 @@ function drawInteractiveChart(rawData) {
     // 画y轴的坐标点
     const numTicks = 6; 
     const tickStep = (maxProduction - originalPoint) / numTicks;
-    for (let i = 0; i <= numTicks; i++) {
+    for (let i = 0; i &lt;= numTicks; i++) {
         const production = i * tickStep + originalPoint;
         const x = axisOffset;
         const y = ctx.canvas.height - axisOffset - (production - originalPoint) * scale;
@@ -282,7 +310,7 @@ function drawInteractiveChart(rawData) {
                 const endX = x + barWidth; 
                 const startY = y; 
                 const endY = y + ((production - originalPoint) * scale); 
-                for (let y = startY; y <= endY; y += gap + lineWidth) {
+                for (let y = startY; y &lt;= endY; y += gap + lineWidth) {
                     ctx.beginPath();
                     ctx.moveTo(startX, y);
                     ctx.lineTo(endX, y);
@@ -302,13 +330,13 @@ function drawInteractiveChart(rawData) {
                 const endX = x + barWidth; 
                 const startY = y; 
                 const endY = y + ((production - originalPoint) * scale); 
-                for (let y = startY; y <= endY; y += gap + lineWidth) {
+                for (let y = startY; y &lt;= endY; y += gap + lineWidth) {
                     ctx.beginPath();
                     ctx.moveTo(startX, y);
                     ctx.lineTo(endX, y);
                     ctx.stroke();
                 }
-                for (let x = startX; x <= endX; x += gap + lineWidth) {
+                for (let x = startX; x &lt;= endX; x += gap + lineWidth) {
                     ctx.beginPath();
                     ctx.moveTo(x, startY);
                     ctx.lineTo(x, endY);
@@ -354,8 +382,8 @@ function drawDots(x, y, width, height) {
     const offsetX = (width - columns * (dotSize + dotSpacing) + dotSpacing) / 2;
     const offsetY = (height - rows * (dotSize + dotSpacing) + dotSpacing) / 2;
 
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < columns; col++) {
+    for (let row = 0; row &lt; rows; row++) {
+        for (let col = 0; col &lt; columns; col++) {
             const dotX = x + offsetX + col * (dotSize + dotSpacing);
             const dotY = y + offsetY + row * (dotSize + dotSpacing);
             ctx.fillStyle = 'black'; 
@@ -383,8 +411,8 @@ function drawCircles(x, y, width, height) {
     const offsetX = (width - columns * (circleRadius * 2 + circleSpacing) + circleSpacing) / 2;
     const offsetY = (height - rows * (circleRadius * 2 + circleSpacing) + circleSpacing) / 2;
 
-    for (let row = 0; row < rows; row++) {
-        for (let col = 0; col < columns; col++) {
+    for (let row = 0; row &lt; rows; row++) {
+        for (let col = 0; col &lt; columns; col++) {
             const circleX = x + offsetX + col * (circleRadius * 2 + circleSpacing) + circleRadius;
             const circleY = y + offsetY + row * (circleRadius * 2 + circleSpacing) + circleRadius;
             ctx.beginPath();
@@ -512,7 +540,7 @@ function displayFilter() {
         list.removeChild(list.firstChild);
     }
     // add a li for every data pair
-    for (let i = 0; i < data.length; i++) {
+    for (let i = 0; i &lt; data.length; i++) {
         let listItem = document.createElement('li');
         let checkbox = document.createElement('input');
         checkbox.type = "checkbox";
@@ -534,7 +562,7 @@ function displayFilter() {
     let ul = document.getElementById('dataList');
     let items = ul.getElementsByTagName('li');
 
-    for (let i = 0; i < items.length; i++) {
+    for (let i = 0; i &lt; items.length; i++) {
         items[i].addEventListener('click', function () {
             this.classList.toggle('selected');
             drawInteractiveChart(data);
@@ -592,7 +620,7 @@ function handleScaleCanvas(event) {
         scale -= step;
     }
 
-    if (scale < 0.5) {
+    if (scale &lt; 0.5) {
         scale = 0.5;
     }
     else if (scale > 2.0) {
@@ -686,4 +714,26 @@ document.getElementById("fillStyle").addEventListener("change", handleChartTypeC
 document.getElementById("barColor").addEventListener("change", handleChartTypeChange);
 document.getElementById("startColor").addEventListener("change", handleChartTypeChange);
 document.getElementById("endColor").addEventListener("change", handleChartTypeChange);
-document.getElementById("gradientStyle").addEventListener("change", handleChartTypeChange);
+document.getElementById("gradientStyle").addEventListener("change", handleChartTypeChange);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#clearCanvas">clearCanvas</a></li><li><a href="global.html#dataFilter">dataFilter</a></li><li><a href="global.html#displayFilter">displayFilter</a></li><li><a href="global.html#drawCircles">drawCircles</a></li><li><a href="global.html#drawDots">drawDots</a></li><li><a href="global.html#drawInteractiveChart">drawInteractiveChart</a></li><li><a href="global.html#drawLineChartLineAndDataPoints">drawLineChartLineAndDataPoints</a></li><li><a href="global.html#drawLineChartPercentageLabels">drawLineChartPercentageLabels</a></li><li><a href="global.html#getCanvasContext">getCanvasContext</a></li><li><a href="global.html#getChartConfig">getChartConfig</a></li><li><a href="global.html#handleChartTypeChange">handleChartTypeChange</a></li><li><a href="global.html#handleDataChangeDefault">handleDataChangeDefault</a></li><li><a href="global.html#handleDataChangeInput">handleDataChangeInput</a></li><li><a href="global.html#handleScaleCanvas">handleScaleCanvas</a></li><li><a href="global.html#handleScaleReset">handleScaleReset</a></li><li><a href="global.html#parseData">parseData</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Thu Jul 27 2023 12:27:45 GMT+0800 (China Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
