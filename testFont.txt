@@ -1,16 +1,10 @@
------- Sans-serif 
-
 Helvetica
 Arial
 Lucida family
 Verdana
 Tahoma
 Trebuchet MS 
-
------- Serif 
 Georgia 
 Times 
-
-
-STSong 华文宋体
-STKaiti 华文楷体
+STSong 
+STKaiti 
