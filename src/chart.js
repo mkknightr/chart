@@ -34,7 +34,6 @@ function clearCanvas() {
  */
 function parseData(inputData) {
     const data = [];
-    console.log(inputData);
     const entries = inputData.split(';');
     for (const entry of entries) {
         const [year, value] = entry.split(',');
@@ -195,7 +194,6 @@ function drawInteractiveChart(rawData) {
         }
         else {
             ctx.save();
-            console.log(year);
             ctx.textAlign = "center";
             ctx.translate(x + config.font.size / 2.5, y + axisOffset / 2);
             ctx.rotate(-Math.PI / 2);
@@ -505,23 +503,22 @@ function handleDataChangeInput() {
  * 功能函数：绘制筛选区
  */
 function displayFilter() {
-    console.log("display filter");
 
     let list = document.getElementById('dataList');
     while (list.firstChild) {
         list.removeChild(list.firstChild);
     }
-    // add a li for every data pair
+
     for (let i = 0; i < data.length; i++) {
         let listItem = document.createElement('li');
         let checkbox = document.createElement('input');
         checkbox.type = "checkbox";
-        checkbox.value = i;  //set checkbox's value with the index of the array
-        checkbox.id = 'checkbox' + i;  // checkbox's unique id
+        checkbox.value = i;  
+        checkbox.id = 'checkbox' + i;  
         checkbox.checked = true;
 
         let label = document.createElement('label');
-        label.htmlFor = 'checkbox' + i;  //associtate the label and checkbox
+        label.htmlFor = 'checkbox' + i;  
         label.textContent = "年份:" + data[i][0] + ", 产量:" + data[i][1];
 
         listItem.appendChild(checkbox);
@@ -530,7 +527,6 @@ function displayFilter() {
         list.appendChild(listItem);
     }
 
-    // add change event
     let ul = document.getElementById('dataList');
     let items = ul.getElementsByTagName('li');
 
@@ -559,12 +555,10 @@ function dataFilter(data) {
         }
     }
 
-    //filter out some data set;
     indices.sort((a, b) => b - a);
     for (let index of indices) {
         data.splice(index, 1);
     }
-    // console.log('filter');
 }
 
 
@@ -574,14 +568,6 @@ function dataFilter(data) {
  * @param {鼠标滚轮滚动事件} event 
  */
 function handleScaleCanvas(event) { 
-    let list = document.getElementById('dataList');
-    let checkboxes = list.getElementsByTagName('input');
-    for (let checkbox of checkboxes) {
-        if (checkbox.checked) {
-            console.log(checkbox);
-        }
-    }
-
     event.preventDefault();
     const delta = Math.sign(event.deltaY);
     const step = 0.1;
@@ -598,23 +584,12 @@ function handleScaleCanvas(event) {
     else if (scale > 2.0) {
         scale = 2.0;
     }
-    console.log("---------------------------------####" + scale);
+
     clearCanvas();
-
-    list = document.getElementById('dataList');
-    checkboxes = list.getElementsByTagName('input');
-    for (let checkbox of checkboxes) {
-        if (checkbox.checked) {
-            console.log(checkbox);
-        }
-    }
-
     const ctx = getCanvasContext();
 
     const mouseX = event.clientX - ctx.canvas.offsetLeft;
     const mouseY = event.clientY - ctx.canvas.offsetTop;
-
-
 
     const offsetX = mouseX * (1 - scale);
     const offsetY = mouseY * (1 - scale);
@@ -622,29 +597,7 @@ function handleScaleCanvas(event) {
     ctx.translate(offsetX, offsetY);
     ctx.scale(scale, scale);
 
-    list = document.getElementById('dataList');
-    checkboxes = list.getElementsByTagName('input');
-    for (let checkbox of checkboxes) {
-        if (checkbox.checked) {
-            console.log(checkbox);
-        }
-    }
     drawInteractiveChart(data);
-    list = document.getElementById('dataList');
-    checkboxes = list.getElementsByTagName('input');
-    for (let checkbox of checkboxes) {
-        if (checkbox.checked) {
-            console.log(checkbox);
-        }
-    }
-    // displayFilter(); 
-    list = document.getElementById('dataList');
-    checkboxes = list.getElementsByTagName('input');
-    for (let checkbox of checkboxes) {
-        if (checkbox.checked) {
-            console.log(checkbox);
-        }
-    }
 }
 
 
@@ -654,7 +607,6 @@ function handleScaleCanvas(event) {
 function handleScaleReset() {
     clearCanvas();
     const ctx = getCanvasContext();
-    scale = 1.0;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     clearCanvas();
     drawInteractiveChart(data);
